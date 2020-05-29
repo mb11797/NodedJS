@@ -38,11 +38,16 @@ function parseHtml(html){
     // let data = $("#header-wrapper  div:nth-child(2)  nav  ul  li:nth-child(1)  a  div  span").text();
     // let data = $("#main-container  div  div  div.card.home-score-card  div.match-header  div.event  div.teams  div:nth-child(2)  div:nth-child(2)  div.score-extra-score").text();
     // let data = $("#header-wrapper  div:nth-child(1)  div  div  div  nav  div  span").text();
-    let data = $("#main-container  div  div  div.match-body  div.comment-container  div.mb-5  div  div:nth-child(1)  div.match-comment  div:nth-child(2)  div").text();
+    let data = $("#main-container  div  div  div.match-body  div.comment-container  div.mb-5  div  div:nth-child(1)  div.match-comment  div:nth-child(2) div");
+    // let lbc = data.find(".match-comment-long-text.match-comment-padder").length;
+    // let data = $("#main-container  div  div  div.match-body  div.comment-container  div.mb-5  div  div:nth-child(1)  div.match-comment  div:nth-child(2)  div div span").text();
     // let data = $("#main-container  div  div  div.match-body  div.comment-container  div.mb-5  div  div:nth-child(1)  div.match-comment  div:nth-child(2)  div").length;
     // let data = $("#main-container  div  div  div.card.home-score-card  div.match-header  div.event  div.teams  div:nth-child(2)  div:nth-child(1)  a  span").text();
     // let data = $("#main-container  div  div  div.match-body  div.comment-container  div.mb-5 > div  div:nth-child(1)  div.match-comment  div:nth-child(2)  div  span  p:nth-child(2)").text();
     console.log("*********************************");
-    console.log(data);
+    // console.log(data)
+    // console.log(lbc);
+    for(let i=0; i<data.length; i++)
+        console.log($(data[i]).text());
 }
 // document.querySelector()
