@@ -9,4 +9,5 @@ let content = fs.readFile("f1.txt", function(err, content){
         console.log(content + "");
     }
 });
+
 console.log("After");
