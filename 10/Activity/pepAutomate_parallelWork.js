@@ -110,7 +110,7 @@ credentialWillBeReadPromise.then(function (content) {
         return fileReadPromise;
     }).then(function (content) {
         let questions = JSON.parse(content);
-        //the => synchronized
+        //then => synchronized
         let questionsWillBeSolvedPromise = solveQuestion(questions[0]);
         for(let i=1; i<questions.length; i++){
             questionsWillBeSolvedPromise = questionsWillBeSolvedPromise.then(function(){
@@ -262,11 +262,14 @@ function goToQuestionPage(question) {
 
             gModules = AllModules;
             console.log(gModules.length);
+
+            //standard way:
             let moduleNameArray = AllModules.map(function (module) {
                 return module.getText();
             })
             return Promise.all(moduleNameArray);
 
+            //Noob way:
             // let textPromiseArray = [];
             // for(let i=0; i<AllModules.length; i++){
             //     let moduleTextPromise = AllModules[i].getText();
@@ -387,7 +390,7 @@ function overlayWillBeDismissedPromise() {
         }).then(function () {
             resolve();
         }).catch(function (err) {
-            rejects(err);
+            reject(err);
         })
     })
 }

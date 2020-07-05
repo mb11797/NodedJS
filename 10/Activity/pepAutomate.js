@@ -32,7 +32,7 @@ credentialWillBeReadPromise.then(function(content){
     pn = password;
 }).then(function(){
     let tabWillBeOpenedPromise = driver.get("https://pepcoding.com/login");
-    return tabWillBeOpenedPromise
+    return tabWillBeOpenedPromise;
 }).then(function(){
     console.log("Tab was successfully opened");
 }).then(function(){
@@ -65,7 +65,7 @@ credentialWillBeReadPromise.then(function(content){
     console.log(err);
 });
 
-// all then will and catch will be run sequentially
+// all then and catch will be run sequentially
 
 // tabWillBeOpenedPromise.catch(function(err){
 //     console.log(err);

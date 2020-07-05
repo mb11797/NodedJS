@@ -1,1 +1,1 @@
-node pepAutomate_parallelWork.js "../credentials.json" "./metadata1.json" "Placement Bootcamp Batch 1"
+node pepAutomate_parallelWork1.js "../credentials.json" "./metadata1.json" "Placement Bootcamp Batch 1"

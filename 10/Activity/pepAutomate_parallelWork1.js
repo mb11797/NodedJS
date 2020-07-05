@@ -229,7 +229,7 @@ function solveQuestion(question) {
             // 3. download testcases
             .then(function(){
                 let p0 = driver.navigate().back();
-                for(let i=1; i<3; i++){
+                for(let i=1; i<4; i++){
                     p0 = p0.then(function(){
                         return driver.navigate().back();
                     })
@@ -373,7 +373,7 @@ function overlayWillBeDismissedPromise() {
         }).then(function () {
             resolve();
         }).catch(function (err) {
-            rejects(err);
+            reject(err);
         })
     })
 }
@@ -387,6 +387,7 @@ function goToQuestionPageHelper(gElements, AllElements, elementName) {
         let elementsNameArray = AllElements.map(function (element) {
             return element.getText();
         })
+        console.log(elementsNameArray.length);
         let allElementsNameArrayPromise = Promise.all(elementsNameArray);
         allElementsNameArrayPromise.then(function (elementsWithText) {
             let i;
