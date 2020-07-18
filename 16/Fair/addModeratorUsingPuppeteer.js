@@ -118,14 +118,18 @@ async function handleQuestion(qElement, tab) {
     //     return element.getAttribute("href");
     // }, qElement);
     await qElement.click();
-    let manageTabsList = await tab.$$(".cursor.change-tab.cep");
-    await manageTabsList[1].click();
-    // await Promise.all([
-    //     tab.waitForNavigation({waitUntil: "networkidle0"}),
-    //     // tab.click("li[data-tab=moderators]")
-    //     // tab.click("a[class=cursor.change-tab.cep]")
-        
-    // ])
+    // await tab.waitForSelector('.tagsinput');
+    await tab.waitForSelector('.tags_clear');
+    // await tab.waitForNavigation({waitUntil: "networkidle0"});
+    // let manageTabsList = await tab.$$(".cursor.change-tab.cep");
+    // await manageTabsList[1].click();
+
+    await tab.waitForSelector("li[data-tab=moderators]");
+    await Promise.all([
+        tab.waitForNavigation({waitUntil: "networkidle0"}),
+        tab.click("li[data-tab=moderators] a"),
+        // tab.click("a[class=cursor.change-tab.cep]")
+    ])
 
     // let manageTabsList = await tab.$(".nav-tabs.nav.admin-tabbed-nav.row li");
     // await Promise.all([
@@ -134,6 +138,7 @@ async function handleQuestion(qElement, tab) {
     // ])
 
     await tab.waitForSelector("#moderator");
-    await tab.type('#moderator', userToAdd);
+    await tab.type('#moderator', userToAdd, {delay: 100});
     await tab.keyboard.press("Enter");
+    return;
 }
