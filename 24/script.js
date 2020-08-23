@@ -7,15 +7,197 @@ $(document).ready(function () {
     // console.log('Jquery Loaded');
     let db;         // database
     let lsc;        // last selected cell
+
+    $(".content-container").on("scroll", function () {
+        let scrollY = $(this).scrollTop();
+        let scrollX = $(this).scrollLeft();
+        //console.log(scrollY);
+        $("#top-row, #top-left-cell").css("top", scrollY + "px");
+        $("#top-left-cell, #left-col").css("left", scrollX + "px");
+    })
+
+    $("#grid .cell").on("keyup", function () {
+        let { rowId } = getrc(this);
+        let ht = $(this).height();
+        // $("#left-col .cell").eq(rowId).height(ht);
+        $($("#left-col .cell")[rowId]).height(ht);
+    })
+
+    $(".menu").hover(function () {
+        let id = $(this).attr("id");
+        // File
+        $(".menu-options").removeClass("selected");
+        $(`#${id}-menu-options`).addClass("selected");
+    })
+
+    $(".menu").on("click", function () {
+        let id = $(this).attr("id");
+        // File
+        $(".menu-options").removeClass("selected");
+        $(`#${id}-menu-options`).addClass("selected");
+    })
+
+    let lcell;
     $("#grid .cell").on('click', function () {
         let { colId, rowId } = getrc(this);
         let value = String.fromCharCode(65 + colId) + (rowId + 1);
         console.log(value);
+        let cellObj = db[rowId][colId];
         $("#address-input").val(value);
 
         // set cell formula ???flat?
+        // if(db[rowId][colId].formula != ""){
+        //     $("#formula-input").html(db[rowId][colId].formula);
+        // }
+        $("#formula-input").val(cellObj.formula);
+        // set cell formula
+        if (lcell && this != lcell) {
+            $(lcell).removeClass("selected");
+        }
 
+        $(this).addClass("selected");
+        if (cellObj.bold) {
+            $("#bold").addClass("isOn");
+        }
+        else {
+            $("#bold").removeClass("isOn");
+        }
+
+        if (cellObj.underline) {
+            $("#underline").addClass("isOn");
+        }
+        else {
+            $("#underline").removeClass("isOn");
+        }
+
+        if (cellObj.italic) {
+            $("#italic").addClass("isOn");
+        }
+        else {
+            $("#italic").removeClass("isOn");
+        }
+
+        if(cellObj.halign == "left"){
+            $("#align-left").addClass("isOn");
+            $("#align-center").removeClass("isOn");
+            $("#align-right").removeClass("isOn");
+        }
+        else{
+            $("#align-left").removeClass("isOn");
+        }
+
+        if(cellObj.halign == "center"){
+            $("#align-center").addClass("isOn");
+            $("#align-left").removeClass("isOn");
+            $("#align-right").removeClass("isOn");
+        }
+        else{
+            $("#align-center").removeClass("isOn");
+        }
+
+        if(cellObj.halign == "right"){
+            $("#align-right").addClass("isOn");
+            $("#align-left").removeClass("isOn");
+            $("#align-center").removeClass("isOn");
+        }
+        else{
+            $("#align-right").removeClass("isOn");
+        }
+
+        lcell = this;
     });
+
+    $("#bold").on("click", function () {
+        $(this).toggleClass("isOn");
+        let isBold = $(this).hasClass("isOn");
+        $("#grid .cell.selected").css("font-weight", isBold ? "bolder" : "normal");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        cellObj.bold = isBold;
+    })
+
+    $('#underline').on("click", function () {
+        $(this).toggleClass("isOn");
+        let isUnderline = $(this).hasClass("isOn");
+        $("#grid .cell.selected").css("text-decoration", isUnderline ? "underline" : "none");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        cellObj.underline = isUnderline;
+    })
+
+    $('#italic').on("click", function () {
+        $(this).toggleClass("isOn");
+        let isItalic = $(this).hasClass("isOn");
+        $("#grid .cell.selected").css("font-style", isItalic ? "italic" : "normal");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        cellObj.italic = isItalic;
+    })
+
+    $("#bg-color").on("change", function () {
+        let bgColor = $(this).val();
+        let cellElem = $("#grid .cell.selected");
+        cellElem.css("background-color", bgColor);
+        let cellObj = getcell(cellElem);
+        cellObj.bgColor = bgColor;
+    })
+
+    $("#font-family").on("change", function () {
+        let fontFamily = $(this).val();
+        $("#grid .cell.selected").css("font-family", fontFamily);
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        cellObj.fontFamily = fontFamily;
+    })
+
+    $("#font-size").on("change", function () {
+        let fontSize = $(this).val();
+        $("#grid .cell.selected").css("font-size", fontSize + "px");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        cellObj.fontSize = fontSize;
+    })
+
+    $('#text-color').on("change", function () {
+        let textColor = $(this).val();
+        let cellElem = $("#grid .cell.selected");
+        cellElem.css("color", textColor);
+        let cellObj = getcell(cellElem);
+        cellObj.textColor = textColor;
+    })
+
+    $('#align-left').on("click", function () {
+        $(this).toggleClass("isOn");
+        $("#align-center").removeClass("isOn");
+        $("#align-right").removeClass("isOn");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        let isLeftAlign = $(this).hasClass("isOn");
+        $("#grid .cell.selected").css("text-align", isLeftAlign ? "left" : cellObj.halign);
+        cellObj.halign = isLeftAlign ? "left" : cellObj.halign;
+    })
+
+    $('#align-center').on("click", function () {
+        $(this).toggleClass("isOn");
+        $("#align-left").removeClass("isOn");
+        $("#align-right").removeClass("isOn");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        let isCenterAlign = $(this).hasClass("isOn");
+        $("#grid .cell.selected").css("text-align", isCenterAlign ? "center" : cellObj.halign);
+        cellObj.halign = isCenterAlign ? "center" : cellObj.halign;
+    })
+
+    $('#align-right').on("click", function () {
+        $(this).toggleClass("isOn");
+        $("#align-left").removeClass("isOn");
+        $("#align-center").removeClass("isOn");
+        let cellElem = $("#grid .cell.selected");
+        let cellObj = getcell(cellElem);
+        let isRightAlign = $(this).hasClass("isOn");
+        $("#grid .cell.selected").css("text-align", isRightAlign ? "right" : cellObj.halign);
+        cellObj.halign = isRightAlign ? "right" : cellObj.halign;
+    })
 
     $("#New").on("click", function () {
         db = [];
@@ -29,23 +211,51 @@ $(document).ready(function () {
                     value: "",
                     formula: "",
                     downstream: [],
-                    upstream: []
+                    upstream: [],
+                    bold: false,
+                    underline: false,
+                    italic: false,
+                    fontFamily: "Arial",
+                    fontSize: 12,
+                    bgColor: "white",
+                    textColor: "black",
+                    halign: "left"
                 }
+                // $(`#grid .cell[r-id=${i}][c-id=${j}]`).html('');
+                $(AllCols[j]).html('');
+                //JS ki help se CSS set kar rahe hain hum:
+                //states of current cell elmt:
+                $(AllCols[j]).css("font-weight", cell.bold ? "bolder" : "normal");
+                $(AllCols[j]).css("font-style", cell.italic ? "italic" : "normal");
+                $(AllCols[j]).css("text-decoration", cell.underline ? "underline" : "none");
+                $(AllCols[j]).css("font-family", cell.fontFamily);
+                $(AllCols[j]).css("font-size", cell.fontSize + "px");
+                $(AllCols[j]).css("color", cell.textColor);
+                $(AllCols[j]).css("background-color", cell.bgColor);
+                $(AllCols[j]).css("text-align", cell.halign);
 
-                // $(AllCols[j]).html('');
                 row.push(cell);
             }
             db.push(row);
         }
         console.log(db);
 
-        $("grid .cell").eq(0).trigger("click");
+        // let AllRows = $("#grid").find(".row");
+        // for (let i = 0; i < AllRows.length; i++) {
+        //     let AllCols = $(AllRows[i]).find(".cell");
+        //     for (let j = 0; j < AllCols.length; j++) {
+        //         //    DB
+        //         $(`#grid .cell[r-id=${i}][c-id=${j}]`).html(db[i][j].value);
+        //     }
+        // }
+
+        // $("grid .cell").eq(0).trigger("click");
         let cellArr = $("#grid .cell");
         $(cellArr[0]).trigger("click");
         return;
     })
 
-    $("Save").on("click", async function () {
+    $("#Save").on("click", async function () {
         // showDialogBox
         let sdb = await dialog.showOpenDialog();
         //file path
@@ -81,7 +291,17 @@ $(document).ready(function () {
             let AllCols = $(AllRows[i]).find(".cell");
             for (let j = 0; j < AllCols.length; j++) {
                 // DB
-                $(`#grid .cell[row-id=${i}][col-id=${j}]`).html(db[i][j].value);
+                let cell = db[i][j];
+                // $(`#grid .cell[row-id=${i}][col-id=${j}]`).html(db[i][j].value);
+                $(AllCols[j]).html(cell.value);
+                $(AllCols[j]).css("font-weight", cell.bold ? "bolder" : "normal");
+                $(AllCols[j]).css("font-style", cell.italic ? "italic" : "normal");
+                $(AllCols[j]).css("text-decoration", cell.underline ? "underline" : "none");
+                $(AllCols[j]).css("font-family", cell.fontFamily);
+                $(AllCols[j]).css("font-size", cell.fontSize);
+                $(AllCols[j]).css("color", cell.textColor);
+                $(AllCols[j]).css("background-color", cell.bgColor);
+                $(AllCols[j]).css("text-align", cell.halign);
             }
         }
     })
@@ -274,6 +494,7 @@ $(document).ready(function () {
 
     // constructor -> initializer
     function init() {
+        $("#File").trigger("click");
         $("#New").trigger("click");
         // db = [];
         // let AllRows = $('#grid').find('.row');
